@@ -1,6 +1,6 @@
 /**
-* Template Name: Plato - v4.7.0
-* Template URL: https://bootstrapmade.com/plato-responsive-bootstrap-website-template/
+* Template Name: BizPage - v5.8.0
+* Template URL: https://bootstrapmade.com/bizpage-bootstrap-business-template/
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 */
@@ -67,6 +67,10 @@
     let header = select('#header')
     let offset = header.offsetHeight
 
+    if (!header.classList.contains('header-scrolled')) {
+      offset -= 20
+    }
+
     let elementPos = select(el).offsetTop
     window.scrollTo({
       top: elementPos - offset,
@@ -75,24 +79,32 @@
   }
 
   /**
-   * Header fixed top on scroll
+   * Toggle .header-scrolled class to #header when page is scrolled
    */
   let selectHeader = select('#header')
   if (selectHeader) {
-    let headerOffset = selectHeader.offsetTop
-    let nextElement = selectHeader.nextElementSibling
-    const headerFixed = () => {
-      if ((headerOffset - window.scrollY) <= 0) {
-        selectHeader.classList.add('fixed-top')
-        nextElement.classList.add('scrolled-offset')
+    const headerScrolled = () => {
+      if (window.scrollY > 100) {
+        selectHeader.classList.add('header-scrolled')
       } else {
-        selectHeader.classList.remove('fixed-top')
-        nextElement.classList.remove('scrolled-offset')
+        selectHeader.classList.remove('header-scrolled')
       }
     }
-    window.addEventListener('load', headerFixed)
-    onscroll(document, headerFixed)
+    window.addEventListener('load', headerScrolled)
+    onscroll(document, headerScrolled)
   }
+
+  /**
+   * Hero carousel indicators
+   */
+  let heroCarouselIndicators = select("#hero-carousel-indicators")
+  let heroCarouselItems = select('#heroCarousel .carousel-item', true)
+
+  heroCarouselItems.forEach((item, index) => {
+    (index === 0) ?
+    heroCarouselIndicators.innerHTML += "<li data-bs-target='#heroCarousel' data-bs-slide-to='" + index + "' class='active'></li>":
+      heroCarouselIndicators.innerHTML += "<li data-bs-target='#heroCarousel' data-bs-slide-to='" + index + "'></li>"
+  });
 
   /**
    * Back to top button
@@ -159,6 +171,33 @@
   });
 
   /**
+   * Preloader
+   */
+  let preloader = select('#preloader');
+  if (preloader) {
+    window.addEventListener('load', () => {
+      preloader.remove()
+    });
+  }
+
+  /**
+   * Skills animation
+   */
+  let skilsContent = select('.skills-content');
+  if (skilsContent) {
+    new Waypoint({
+      element: skilsContent,
+      offset: '80%',
+      handler: function(direction) {
+        let progress = select('.progress .progress-bar', true);
+        progress.forEach((el) => {
+          el.style.width = el.getAttribute('aria-valuenow') + '%'
+        });
+      }
+    })
+  }
+
+  /**
    * Porfolio isotope and filter
    */
   window.addEventListener('load', () => {
@@ -210,6 +249,42 @@
       el: '.swiper-pagination',
       type: 'bullets',
       clickable: true
+    }
+  });
+
+  /**
+   * Clients Slider
+   */
+  new Swiper('.clients-slider', {
+    speed: 400,
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false
+    },
+    slidesPerView: 'auto',
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 2,
+        spaceBetween: 20
+      },
+      480: {
+        slidesPerView: 3,
+        spaceBetween: 20
+      },
+      640: {
+        slidesPerView: 4,
+        spaceBetween: 20
+      },
+      992: {
+        slidesPerView: 6,
+        spaceBetween: 20
+      }
     }
   });
 
